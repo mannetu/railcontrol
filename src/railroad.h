@@ -1,50 +1,64 @@
 #ifndef RAILROAD_H
 #define RAILROAD_H
+/*********************************************************
+* railroad.h
+*
+*
+*********************************************************/
 
 #include <string>
 class Canbus;
 
 //-------------------------------------------------------------
 // CAN address masks
-
+//-------------------------------------------------------------
 const int ADDR_TURN = 0x400; // Turnout Set
 const int ADDR_TUFB = 0x500; // Turnout Feedback
 const int ADDR_SIGN = 0x600; // Signal Set
 
 //-------------------------------------------------------------
 // Railroad
-
+//-------------------------------------------------------------
 class Railroad {
   public:
-  virtual int set(int state) = 0;
-
+    virtual int set_state(int state) = 0;
+    virtual int get_state() = 0;
+    virtual std::string get_label() = 0;
   protected:
-  Railroad(Canbus& bus) : m_bus(bus), m_node(0), m_nr(0),
-      m_canid(0), m_state(0) {};
-  Canbus& m_bus;
-  std::string m_label;
-  int m_node;
-  int m_nr;
-  int m_canid;
-  int m_state;
+    Railroad(Canbus& bus)
+    : m_bus(bus),
+      m_node(0),
+      m_nr(0),
+      m_canid(0),
+      m_state(0) { };
+    Canbus& m_bus;
+    std::string m_label;
+    int m_node;
+    int m_nr;
+    int m_canid;
+    int m_state;
 };
 
 //-------------------------------------------------------------
 // Turnouts
-
+//-------------------------------------------------------------
 class Turnout : public Railroad {
   public:
-  Turnout(Canbus& bus, std::string label, int node, int nr);
-  int set(int state);
+    Turnout(Canbus& bus, std::string label, int node, int nr);
+    int set_state(int state);
+    int get_state() {return m_state;};
+    std::string get_label() {return m_label;};
 };
 
 //-------------------------------------------------------------
 // Signals
-
+//-------------------------------------------------------------
 class Sign : public Railroad {
   public:
-  Sign(Canbus& bus, std::string label, int node, int nr);
-  int set(int state);
+    Sign(Canbus& bus, std::string label, int node, int nr);
+    int set_state(int state);
+    int get_state() {return m_state;};
+    std::string get_label() {return m_label;};
 };
 
-#endif
+#endif // RAILROAD_H

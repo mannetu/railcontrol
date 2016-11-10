@@ -1,11 +1,15 @@
+/*********************************************************
+* railroad.cpp
+*
+*
+*********************************************************/
 #include "railroad.h"
-#include "iostream"
+#include <iostream>
 #include "canbus.h"
-
 
 //-------------------------------------------------------------
 // Turnouts
-
+//-------------------------------------------------------------
 Turnout::Turnout(Canbus& bus, std::string label, int node, int nr) : Railroad(bus)
 {
   m_label = label;
@@ -13,22 +17,23 @@ Turnout::Turnout(Canbus& bus, std::string label, int node, int nr) : Railroad(bu
   m_nr = nr;
   m_canid = (ADDR_TURN | (m_node << 4) | m_nr);
   m_state = 0;
-  std::cout << "Turnout\t'" << m_label << std::hex << std::showbase
-            << "'\t Node: " << m_node << "  Nr: " << m_nr
+  std::cout << "Weiche '" << m_label << std::dec
+            << "'\tNode: " << m_node
+            << "\tNr: " << m_nr << std::hex << std::showbase
             << "\tCAN-ID: " << m_canid << "\n";
 }
 
-int Turnout::set(int state)
+int Turnout::set_state(int state)
 {
   m_state = state;
-  std::cout << "\nTurnout '" << m_label << " auf " << m_state << std::endl;
+  std::cout << "\nTurnout \'" << m_label << "\' auf " << std::dec << m_state << std::endl;
   m_bus.output(m_canid, m_state);
   return 0;
 }
 
 //-------------------------------------------------------------
 // Signals
-
+//-------------------------------------------------------------
 Sign::Sign(Canbus& bus, std::string label, int node, int nr) : Railroad(bus)
 {
   m_label = label;
@@ -36,15 +41,16 @@ Sign::Sign(Canbus& bus, std::string label, int node, int nr) : Railroad(bus)
   m_nr = nr;
   m_canid = (ADDR_SIGN | (m_node << 4) | m_nr);
   m_state = 0;
-  std::cout << "Signal\t'" << m_label << std::hex << std::showbase
-            << "'\t Node: " << m_node << "  Nr: " << m_nr
+  std::cout << "Signal '" << m_label << std::dec
+            << "'\tNode: " << m_node
+            << "\tNr: " << m_nr << std::hex << std::showbase
             << "\tCAN-ID: " << m_canid << "\n";
 }
 
-int Sign::set(int state)
+int Sign::set_state(int state)
 {
   m_state = state;
-  std::cout << "\nSignal '" << m_label << " auf " << m_state << std::endl;
+  std::cout << "\nSignal \'" << m_label << "\' auf " << std::dec << m_state << std::endl;
   m_bus.output(m_canid, m_state);
   return 0;
 }

@@ -1,6 +1,11 @@
+/*********************************************************
+* canbus.cpp
+*
+*
+*********************************************************/
+
 #include "canbus.h"
 #include "iostream"
-
 
 Canbus::Canbus(const char* ifname) : m_ifname{ifname}
 {
@@ -37,7 +42,7 @@ int Canbus::get_frame()
 
 int Canbus::output(int canid, int data0)
 {
-  std::cout << std::hex << std::showbase << "CAN: " << canid << "\t| " << data0;
+  std::cout << std::hex << std::showbase << "CAN: " << canid << " | " << data0;
   m_frame.can_id = canid;
   m_frame.can_dlc = 1;
   m_frame.data[0] = data0;
@@ -47,7 +52,7 @@ int Canbus::output(int canid, int data0)
 int Canbus::send_frame()
 {
   nbytes = write(s, &m_frame, sizeof(struct can_frame));
-  std::cout << std::dec << "\tWrote " << nbytes << "bytes" << std::endl;
+  std::cout << std::dec << " ..wrote " << nbytes << "bytes" << std::endl;
   return nbytes;
 }
 

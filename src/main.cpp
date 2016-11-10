@@ -1,21 +1,42 @@
+/*********************************************************
+* Railcontrol
+* main.cpp
+*
+*********************************************************/
+
 #include <iostream>
+#include <vector>
 #include "railroad.h"
 #include "canbus.h"
-//class Canbus;
 
 int main()
 {
+  std::cout
+  << "*******************************************************\n"
+  << "*       Bruno's Railcontrol System                    *\n"
+  << "*                v1.0                                 *\n"
+  << "*******************************************************\n\n";
+
   Canbus railbus{"vcan0"};
 
-  std::cout << "Define railroad layout..\n";
-  Turnout turnout{railbus, "Bahnhof-Gleis2-Ost", 1, 1};
-  Sign sign{railbus, "Bahnhof-Einfahrt-West", 2, 2};
+  // Definition of turnouts and signals
+  std::cout << "Define railroad layout..\n\n";
+  std::vector<Turnout> turnout;
+  turnout.push_back({railbus, "Bahnhof-West", 1, 0});
+  turnout.push_back({railbus, "Bahnhof-Ost", 2, 0});
+  turnout.push_back({railbus, "Abstellgleis", 1, 1});
+  turnout.push_back({railbus, "Bergbahn", 3, 0});
 
-  std::cout << "Switching parts..\n";
-  turnout.set(1);
-  sign.set(2);
+  std::vector<Sign> sign;
+  sign.push_back({railbus, "Bhf-Ein-West", 2, 2});
 
-  while(1) railbus.get_frame();
+  // Test switching
+  std::cout << "\nSwitching parts..\n";
+  turnout[2].set_state(1);
+  sign[0].set_state(2);
+
+  // Test receiving CAN messages
+  //  while(1) railbus.get_frame();
 
   return 0;
 }
