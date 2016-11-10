@@ -4,7 +4,6 @@
 
 Canbus::Canbus(const char* ifname) : m_ifname{ifname}
 {
-  std::cout << "Init CAN controller on " << m_ifname << "\n\n";
   init();
 }
 
@@ -53,7 +52,7 @@ int Canbus::send_frame()
 }
 
 int Canbus::init() {
-  std::cout << std::endl << "Setting up CAN bus..." ;
+  std::cout << "\nSetting up CAN controller ... " ;
   s = socket(PF_CAN, SOCK_RAW | SOCK_NONBLOCK, CAN_RAW);
   if (s < 0)
   {
@@ -65,7 +64,7 @@ int Canbus::init() {
   addr.can_family  = AF_CAN;
   addr.can_ifindex = ifr.ifr_ifindex;
 
-  printf("%s at index %d\n", m_ifname, ifr.ifr_ifindex);
+  printf("%s at index %d\n\n", m_ifname, ifr.ifr_ifindex);
 
   if (bind(s, (struct sockaddr *)&addr, sizeof(addr)) < 0)
   {

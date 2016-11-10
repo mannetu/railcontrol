@@ -39,4 +39,4 @@ private:
   int send_frame();
 };
 
-#endif
+#endif // CANBUS_H
