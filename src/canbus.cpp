@@ -52,7 +52,7 @@ int Canbus::output(int canid, int data0)
 int Canbus::send_frame()
 {
   nbytes = write(s, &m_frame, sizeof(struct can_frame));
-  std::cout << std::dec << " ..wrote " << nbytes << "bytes" << std::endl;
+  std::cout << std::dec << " [wrote " << nbytes << "bytes]" << std::endl;
   return nbytes;
 }
 
