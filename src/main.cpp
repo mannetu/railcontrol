@@ -8,6 +8,8 @@
 #include <vector>
 #include "railroad.h"
 #include "canbus.h"
+#include "commandline.h"
+
 
 int main()
 {
@@ -30,10 +32,14 @@ int main()
   std::vector<Sign> sign;
   sign.push_back({railbus, "Bhf-Ein-West", 2, 2});
 
+
+  commandline(turnout, sign);
+
+
   // Test switching
-  std::cout << "\nSwitching parts..\n";
-  turnout[2].set_state(1);
-  sign[0].set_state(2);
+  // std::cout << "\nSwitching parts..\n";
+  // turnout[2].set_state(1);
+  // sign[0].set_state(2);
 
   // Test receiving CAN messages
   //  while(1) railbus.get_frame();
