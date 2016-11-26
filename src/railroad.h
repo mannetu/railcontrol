@@ -28,13 +28,14 @@ class Railroad {
     Railroad(Canbus& bus)
     : m_bus(bus),
       m_node(0),
-      m_nr(0),
+      m_channel(0),
       m_canid(0),
       m_state(0) { };
     Canbus& m_bus;
     std::string m_label;
-    int m_node;
     int m_nr;
+    int m_node;
+    int m_channel;
     int m_canid;
     int m_state;
 };
@@ -44,7 +45,7 @@ class Railroad {
 //-------------------------------------------------------------
 class Turnout : public Railroad {
   public:
-    Turnout(Canbus& bus, std::string label, int node, int nr);
+    Turnout(Canbus& bus, int nr, std::string label, int node, int channel);
     int set_state(int state);
     int get_state() {return m_state;};
     std::string get_label() {return m_label;};
@@ -55,7 +56,7 @@ class Turnout : public Railroad {
 //-------------------------------------------------------------
 class Sign : public Railroad {
   public:
-    Sign(Canbus& bus, std::string label, int node, int nr);
+    Sign(Canbus& bus, int nr, std::string label, int node, int channel);
     int set_state(int state);
     int get_state() {return m_state;};
     std::string get_label() {return m_label;};
