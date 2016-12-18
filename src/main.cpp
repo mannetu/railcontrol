@@ -9,7 +9,7 @@
 #include "railroad.h"
 #include "canbus.h"
 #include "commandline.h"
-
+#include "gleisstellbild.h"
 
 int main()
 {
@@ -26,13 +26,19 @@ int main()
 
   std::vector<Turnout> turnout;
   turnout.push_back({railbus, 0, "Bahnhof-West", 1, 0});
-  turnout.push_back({railbus, 1, "Bahnhof-Ost ", 2, 0});
+  turnout.push_back({railbus, 1, "Bahnhof-Ost", 2, 0});
   turnout.push_back({railbus, 2, "Abstellgleis", 1, 1});
-  turnout.push_back({railbus, 3, "Bergbahn    ", 3, 0});
+  turnout.push_back({railbus, 3, "Bergbahn", 3, 0});
 
   std::vector<Sign> sign;
   sign.push_back({railbus, 0, "Bhf-Ein-West", 2, 2});
 
+/*
+  auto app = Gtk::Application::create("org.gtkmm.example");
+    GleisStellBild gsb;
+    //Shows the window and returns when it is closed.
+    return app->run(gsb);
+*/
 
   std::cout << "\nEnter instructions: \n";
   while(1)
@@ -44,12 +50,11 @@ int main()
   //commandline(turnout, sign);
 
   // Test switching
-  // std::cout << "\nSwitching parts..\n";
   // turnout[2].set_state(1);
   // sign[0].set_state(2);
 
   // Test receiving CAN messages
-  //  while(1) railbus.get_frame();
+  // while(1) railbus.get_frame();
 
   return 0;
 }

@@ -10,6 +10,7 @@
 #include "canbus.h"
 #include "railroad.h"
 
+
 //--------------------------------------------------------------------
 // Constructor
 //--------------------------------------------------------------------
@@ -48,7 +49,7 @@ bool GleisStellBild::timeout_handler()
 {
   //std::cout << "timeout..." << std::endl;
   struct can_frame frame;
-  if (railbus.get_msg(frame) > 0)
+  if (railbus.get_frame() > 0)
   {
     // Update label with CAN message
     std::stringstream message_stream;
@@ -139,9 +140,6 @@ int GleisStellBild::SetupGui()
 
     m_Messageframe.add(m_Messagebox);
     m_Messageframe.show();
-
-
-
 
 
   m_Maingrid.pack_start(m_Label, Gtk::PACK_EXPAND_WIDGET, 20);

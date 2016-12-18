@@ -20,10 +20,11 @@ GTKLIB=`pkg-config gtkmm-3.0 --cflags --libs`
 LD=g++
 LDFLAGS=$(PTHREAD) $(GTKLIB) -export-dynamic
 
-OBJS=    main.o canbus.o railroad.o commandline.o #gleisstellbild.o
+OBJS= main.o canbus.o railroad.o commandline.o #gleisstellbild.o
 
 all: $(OBJS)
 		$(LD) -o $(TARGET) $(OBJS) $(LDFLAGS)
+
 
 main.o: src/main.cpp
 		$(CC) -c $(CCFLAGS) src/main.cpp $(GTKLIB) -o main.o
@@ -39,6 +40,8 @@ commandline.o: src/commandline.cpp
 
 #gleisstellbild.o: src/gleisstellbild.cpp
 #		$(CC) -c $(CCFLAGS) src/gleisstellbild.cpp $(GTKLIB) -o gleisstellbild.o
+
+
 
 
 clean:
