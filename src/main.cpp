@@ -25,13 +25,14 @@ int main()
   std::cout << "Define railroad layout..\n\n";
 
   std::vector<Turnout> turnout;
-  turnout.push_back({railbus, 0, "Bahnhof-West", 1, 0});
-  turnout.push_back({railbus, 1, "Bahnhof-Ost", 2, 0});
-  turnout.push_back({railbus, 2, "Abstellgleis", 1, 1});
+  turnout.push_back({railbus, 0, "Bahnhof-West", 0, 0});
+  turnout.push_back({railbus, 1, "Bahnhof-Ost", 1, 0});
+  turnout.push_back({railbus, 2, "Abstellgleis", 2, 1});
   turnout.push_back({railbus, 3, "Bergbahn", 3, 0});
 
   std::vector<Sign> sign;
   sign.push_back({railbus, 0, "Bhf-Ein-West", 2, 2});
+  sign.push_back({railbus, 1, "Bhf-Ein-Ost", 0, 0});
 
 /*
   auto app = Gtk::Application::create("org.gtkmm.example");
