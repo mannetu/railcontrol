@@ -44,7 +44,7 @@ int main()
 
  /* 
    Text-based user interface  
-  
+ 
   // Start thread checking for received msges 
   std::thread thread1(thread_get_frame, std::ref(railbus));
   thread1.detach();
