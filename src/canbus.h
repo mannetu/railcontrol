@@ -29,6 +29,7 @@ public:
   Canbus(const char* ifname);
   int output(int id, int state);
   int get_frame();
+  can_frame get_data();
 private:
   const char* m_ifname;
   struct can_frame m_frame;

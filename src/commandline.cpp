@@ -5,6 +5,12 @@
 #include "railroad.h"
 
 
+void console(std::vector<Turnout>& turnout, std::vector<Sign>& sign) 
+{
+  std::cout << "\nEnter instructions: \n";   
+  while(commandline(turnout, sign));
+}
+
 int commandline(std::vector<Turnout>& turnout, std::vector<Sign>& sign)
 {
   if(!terminal_input(turnout, sign))

@@ -12,6 +12,11 @@ Canbus::Canbus(const char* ifname) : m_ifname{ifname}
   init();
 }
 
+can_frame Canbus::get_data()
+{
+  return m_frame;
+}
+
 int Canbus::get_frame()
 {
   nbytes = read(s, &m_frame, sizeof(struct can_frame));

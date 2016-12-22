@@ -5,6 +5,8 @@
 //******************************************************************
 
 #include <gtkmm.h>
+#include "railroad.h"
+#include "canbus.h"
 
 
 //-------------------------------------------------------------
@@ -14,12 +16,17 @@
 class GleisStellBild : public Gtk::Window
 {
 public:
-  GleisStellBild();
+  GleisStellBild(Canbus& bus, std::vector<Turnout>& turnout, std::vector<Sign>& sign);
+  	
   ~GleisStellBild();
 
 protected:
+	Canbus& m_bus;
+	std::vector<Turnout>& m_turnout;
+	std::vector<Sign>& m_sign;
   void on_button_clicked(int); // Signal handler
   bool timeout_handler(); // Setup regular check if CAN message arrived
+
 
   // Member widgets:
   Gtk::VBox m_Maingrid;

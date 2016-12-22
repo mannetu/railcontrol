@@ -7,15 +7,16 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include "canbus.h"
-#include "railroad.h"
 
 
 //--------------------------------------------------------------------
 // Constructor
 //--------------------------------------------------------------------
 
-GleisStellBild::GleisStellBild()
+GleisStellBild::GleisStellBild(Canbus& bus, std::vector<Turnout>& turnout, std::vector<Sign>& sign)
+  : m_bus(bus),
+    m_turnout(turnout),
+    m_sign(sign)
 {
   std::cout << std::endl << "********** railCONTROL ************\n";
 
@@ -24,7 +25,7 @@ GleisStellBild::GleisStellBild()
 
   // Setup regular check if CAN message arrived
   Glib::signal_timeout().connect(
-    sigc::mem_fun(*this, &GleisStellBild::timeout_handler), 1000);
+    sigc::mem_fun(*this, &GleisStellBild::timeout_handler), 100);
 }
 
 GleisStellBild::~GleisStellBild()
@@ -36,9 +37,8 @@ GleisStellBild::~GleisStellBild()
 //--------------------------------------------------------------------
 void GleisStellBild::on_button_clicked(int data)
 {
-  std::cout << "Weiche " << data << " clicked" << std::endl;
-  int state = turnout[data].get_state();
-  turnout[data].set_state(!state);
+  int state = m_turnout[data].get_state();
+  m_turnout[data].set_state(!state);
 };
 
 
@@ -47,10 +47,10 @@ void GleisStellBild::on_button_clicked(int data)
 //--------------------------------------------------------------------
 bool GleisStellBild::timeout_handler()
 {
-  //std::cout << "timeout..." << std::endl;
-  struct can_frame frame;
-  if (railbus.get_frame() > 0)
+  if (m_bus.get_frame() > 0)
   {
+    struct can_frame frame(m_bus.get_data());
+    
     // Update label with CAN message
     std::stringstream message_stream;
     message_stream << "CAN_ID: " << std::showbase << std::hex << frame.can_id;
@@ -148,3 +148,6 @@ int GleisStellBild::SetupGui()
   m_Maingrid.show();
   return 0;
 };
+
+
+

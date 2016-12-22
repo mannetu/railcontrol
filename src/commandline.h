@@ -5,6 +5,8 @@
 #include <vector>
 
 
+void console(std::vector<Turnout>& turnout, std::vector<Sign>& sign);
+
 int commandline(std::vector<Turnout>&, std::vector<Sign>&);
 
 //------------------------------------------------------------------
