@@ -62,7 +62,8 @@ int Canbus::send_frame()
   return nbytes;
 }
 
-int Canbus::init() {
+int Canbus::init() 
+{
   std::cout << "\nSetting up CAN controller ... " ;
   s = socket(PF_CAN, SOCK_RAW | SOCK_NONBLOCK, CAN_RAW);
   if (s < 0)
