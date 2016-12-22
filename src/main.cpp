@@ -43,10 +43,7 @@ int main(int argc, char *argv[])
   sign.push_back({railbus, 0, "Bhf-Ein-West", 2, 2});
   sign.push_back({railbus, 1, "Bhf-Ein-Ost", 0, 0});
 
-  // Start CAN daemon thread
-  std::thread thread1(thread_get_frame, std::ref(railbus));
-  thread1.detach();
-
+  
   // Start user interface (GUI or text-based)
   if (argc>1 && (!strcmp("-g", argv[1]))) 
   {  
@@ -58,6 +55,10 @@ int main(int argc, char *argv[])
   } 
   else 
   {       
+    // Start CAN daemon thread
+    std::thread thread1(thread_get_frame, std::ref(railbus));
+    thread1.detach();
+
     // Text user interface
     console(turnout, sign);
     return 0;
