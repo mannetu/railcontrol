@@ -29,14 +29,15 @@ int Canbus::get_frame()
     return -1;
   }
   // Output received message
-  std::cout << std::dec << "Msg received: " << int(m_frame.can_dlc)
+  std::cout << std::dec << "\n<< Msg received: " << int(m_frame.can_dlc)
     << " Byte\t" << "ID: " << std::hex << std::showbase << m_frame.can_id
     << " || ";
   for (int i = 0; i < m_frame.can_dlc; i++)
   {
     std::cout << int(m_frame.data[i]) << " | ";
   }
-  std::cout << std::endl;
+  std::cout << std::dec << "\n>> ";
+  std::cout.flush();
   return nbytes;
 }
 
@@ -52,7 +53,7 @@ int Canbus::output(int canid, int data0)
 int Canbus::send_frame()
 {
   nbytes = write(s, &m_frame, sizeof(struct can_frame));
-  std::cout << std::dec << " [wrote " << nbytes << "bytes]" << std::endl;
+  std::cout << std::dec << " [wrote " << nbytes << "bytes]\n" << std::endl;
   return nbytes;
 }
 

@@ -6,10 +6,25 @@
 
 #include <iostream>
 #include <vector>
+#include <thread>
+#include <mutex>
 #include "railroad.h"
 #include "canbus.h"
 #include "commandline.h"
 #include "gleisstellbild.h"
+
+Canbus railbus{"vcan0"};
+std::vector<Turnout> turnout;
+std::vector<Sign> sign;
+
+
+void thread_get_frame()
+{
+  while(1)
+  {
+    railbus.get_frame();
+  }
+}
 
 int main()
 {
@@ -19,18 +34,14 @@ int main()
   << "*                    v1.0                          *\n"
   << "****************************************************\n\n";
 
-  Canbus railbus{"vcan0"};
-
   // Definition of turnouts and signals
   std::cout << "Define railroad layout..\n\n";
 
-  std::vector<Turnout> turnout;
   turnout.push_back({railbus, 0, "Bahnhof-West", 0, 0});
   turnout.push_back({railbus, 1, "Bahnhof-Ost", 1, 0});
   turnout.push_back({railbus, 2, "Abstellgleis", 2, 1});
   turnout.push_back({railbus, 3, "Bergbahn", 3, 0});
 
-  std::vector<Sign> sign;
   sign.push_back({railbus, 0, "Bhf-Ein-West", 2, 2});
   sign.push_back({railbus, 1, "Bhf-Ein-Ost", 0, 0});
 
@@ -42,11 +53,11 @@ int main()
 */
 
   std::cout << "\nEnter instructions: \n";
-  while(1)
-  {
-    if (!commandline(turnout, sign)) break;
-    railbus.get_frame();
-  }
+
+  std::thread thread1(thread_get_frame);
+
+  while(commandline(turnout, sign));
+  thread1.detach();
 
   //commandline(turnout, sign);
 
