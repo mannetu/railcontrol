@@ -41,7 +41,7 @@ int Canbus::get_frame()
   {
     std::cout << int(m_frame.data[i]) << " | ";
   }
-  std::cout << std::dec << "\n>> ";
+  std::cout << "\n>> ";
   std::cout.flush();
   return nbytes;
 }
@@ -65,7 +65,8 @@ int Canbus::send_frame()
 int Canbus::init() 
 {
   std::cout << "\nSetting up CAN controller ... " ;
-  s = socket(PF_CAN, SOCK_RAW | SOCK_NONBLOCK, CAN_RAW);
+  s = socket(PF_CAN, SOCK_RAW | SOCK_NONBLOCK, CAN_RAW); 
+//  s = socket(PF_CAN, SOCK_RAW, CAN_RAW); 
   if (s < 0)
   {
     perror("Error while opening socket");

@@ -7,6 +7,9 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <mutex>
+
+std::mutex mtx;
 
 
 //--------------------------------------------------------------------
@@ -117,10 +120,9 @@ void GleisStellBild::on_button_clicked(int data)
 //--------------------------------------------------------------------
 bool GleisStellBild::timeout_handler()
 {
-  if (m_bus.get_frame() > 0)
+ if (m_bus.get_frame() > 0)
   {
     struct can_frame frame(m_bus.get_data());
-    
     // Update label with CAN message
     std::stringstream message_stream;
     message_stream << "CAN_ID: " << std::showbase << std::hex << frame.can_id;

@@ -7,12 +7,14 @@
 #include <iostream>
 #include <vector>
 #include <thread>
+#include <chrono>
 //#include <mutex>
 #include "railroad.h"
 #include "canbus.h"
 #include "commandline.h"
 #include "gleisstellbild.h"
 
+//std::mutex mtx;
 
 // Function prototypes
 void thread_get_frame(Canbus &railbus);
@@ -41,6 +43,10 @@ int main(int argc, char *argv[])
   sign.push_back({railbus, 0, "Bhf-Ein-West", 2, 2});
   sign.push_back({railbus, 1, "Bhf-Ein-Ost", 0, 0});
 
+  // Start CAN daemon thread
+  std::thread thread1(thread_get_frame, std::ref(railbus));
+  thread1.detach();
+
   // Start user interface (GUI or text-based)
   if (argc>1 && (!strcmp("-g", argv[1]))) 
   {  
@@ -51,13 +57,8 @@ int main(int argc, char *argv[])
     return app->run(gsb);    
   } 
   else 
-  {
-   // Text user interface
-   // Start thread checking for received msges 
-    std::thread thread1(thread_get_frame, std::ref(railbus));
-    thread1.detach();
-  
-    // Start input
+  {       
+    // Text user interface
     console(turnout, sign);
     return 0;
   }
@@ -65,10 +66,10 @@ int main(int argc, char *argv[])
 
 void thread_get_frame(Canbus &railbus)
 {
-  while(1) 
+  while(1)  
   {
     railbus.get_frame();
-    std::chrono
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
 }
 
