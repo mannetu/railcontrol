@@ -1,10 +1,10 @@
 #ifndef CANBUS_H
 #define CANBUS_H
-/*********************************************************
-* canbus.h
-*
-*
-*********************************************************/
+/*
+ 
+  canbus.h
+
+*/
 
 #include <string>
 // Libraries for SocketCAN
@@ -26,10 +26,19 @@
 class Canbus
 {
 public:
-  Canbus(const char* ifname);
-  int output(int id, int state);
-  int get_frame();
-  can_frame get_data();
+  // Constructor. Opens and binds socket to CAN controller
+  Canbus(const char* ifname); 
+
+  // sends msg with id and data byte 0. Returns number of send bytes
+  int output(int id, int state);  
+  
+  /* checks if msg is available, stores frame and returns number of 
+     received bytes.  */
+  int is_can_msg(); 
+  
+  // returns frame received by call of is_can_msg();
+  can_frame get_frame(); 
+
 private:
   const char* m_ifname;
   struct can_frame m_frame;

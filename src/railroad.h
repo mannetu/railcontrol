@@ -1,10 +1,10 @@
 #ifndef RAILROAD_H
 #define RAILROAD_H
-/*********************************************************
-* railroad.h
-*
-*
-*********************************************************/
+/*
+
+  railroad.h
+
+*/
 
 #include <string>
 class Canbus;

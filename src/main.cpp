@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
   // Define CANbus, turnouts and signals 
   Canbus railbus{"vcan0"};
   
-  std::cout << "Define railroad layout..\n\n";
+  std::cout << "Railroad layout..\n\n";
 
   std::vector<Turnout> turnout;
   turnout.push_back({railbus, 0, "Bahnhof-West", 0, 0});
@@ -44,22 +44,20 @@ int main(int argc, char *argv[])
   sign.push_back({railbus, 1, "Bhf-Ein-Ost", 0, 0});
 
   
-  // Start user interface (GUI or text-based)
-  if (argc>1 && (!strcmp("-g", argv[1]))) 
+  
+  if (argc>1 && (!strcmp("-g", argv[1]))) // GUI
   {  
-    // GUI
     auto app = Gtk::Application::create("org.gtkmm.example");
     GleisStellBild gsb(railbus, turnout, sign);
     //Shows the window and returns when it is closed.
     return app->run(gsb);    
   } 
-  else 
+  else // Terminal-UI
   {       
     // Start CAN daemon thread
     std::thread thread1(thread_get_frame, std::ref(railbus));
     thread1.detach();
-
-    // Text user interface
+    // Terminal input routine
     console(turnout, sign);
     return 0;
   }
@@ -69,7 +67,7 @@ void thread_get_frame(Canbus &railbus)
 {
   while(1)  
   {
-    railbus.get_frame();
+    railbus.is_can_msg();
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
 }

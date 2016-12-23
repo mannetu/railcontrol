@@ -3,13 +3,11 @@
 */
 
 #include "gleisstellbild.h"
+#include "canbus.h"
 
 #include <iostream>
 #include <vector>
 #include <string>
-#include <mutex>
-
-std::mutex mtx;
 
 
 //--------------------------------------------------------------------
@@ -45,7 +43,7 @@ int GleisStellBild::SetupGui()
 
   m_Label.set_text("Bruno's RailroadController");
 
-  m_Weichenframe.set_label("Turnouts");
+  m_Weichenframe.set_label("Weichen");
     // Button0
     m_button0.set_label(m_turnout[0].get_label());
     m_button0.signal_clicked().connect(sigc::bind<int>(
@@ -120,16 +118,17 @@ void GleisStellBild::on_button_clicked(int data)
 //--------------------------------------------------------------------
 bool GleisStellBild::timeout_handler()
 {
- if (m_bus.get_frame() > 0)
+ if (m_bus.is_can_msg() > 0)
   {
-    struct can_frame frame(m_bus.get_data());
-    // Update label with CAN message
+    // get frame if msg is available
+    struct can_frame frame(m_bus.get_frame());
+    
+    // update GUI label with CAN message
     std::stringstream message_stream;
     message_stream << "CAN_ID: " << std::showbase << std::hex << frame.can_id;
     std::string message = message_stream.str();
     message_stream.str(std::string());
     m_ID.set_text(message);
-
 
     message_stream << "\nDLC: " << std::hex << int(frame.can_dlc);
     message = message_stream.str();

@@ -8,7 +8,7 @@
 
 #include <gtkmm.h>
 #include "railroad.h"
-#include "canbus.h"
+class Canbus;
 
 //-------------------------------------------------------------
 // Class GleisStellBild

@@ -1,8 +1,9 @@
-/*********************************************************
-* canbus.cpp
-*
-*
-*********************************************************/
+/*
+ 
+  canbus.cpp
+ 
+*/
+
 
 #include "canbus.h"
 #include "iostream"
@@ -12,12 +13,12 @@ Canbus::Canbus(const char* ifname) : m_ifname{ifname}
   init();
 }
 
-can_frame Canbus::get_data()
+can_frame Canbus::get_frame()
 {
   return m_frame;
 }
 
-int Canbus::get_frame()
+int Canbus::is_can_msg()
 {
   nbytes = read(s, &m_frame, sizeof(struct can_frame));
 
@@ -64,7 +65,7 @@ int Canbus::send_frame()
 
 int Canbus::init() 
 {
-  std::cout << "\nSetting up CAN controller ... " ;
+  std::cout << "\nSetting up CAN controller... " ;
   s = socket(PF_CAN, SOCK_RAW | SOCK_NONBLOCK, CAN_RAW); 
 //  s = socket(PF_CAN, SOCK_RAW, CAN_RAW); 
   if (s < 0)
