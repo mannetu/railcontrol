@@ -8,19 +8,20 @@
 void console(std::vector<Turnout>& turnout, std::vector<Sign>& sign) 
 {
   std::cout << "\nEnter instructions: \n";   
-  while(commandline(turnout, sign));
+  int x = 1;
+  while(x) 
+  {
+    if(!terminal_input(turnout, sign))
+    {
+      std::cin.clear();
+      std::cin.ignore(1000, '\n');
+      x = 1;
+    }
+    else 
+      x = 0;
+  }
 }
 
-int commandline(std::vector<Turnout>& turnout, std::vector<Sign>& sign)
-{
-  if(!terminal_input(turnout, sign))
-  {
-    std::cin.clear();
-    std::cin.ignore(1000, '\n');
-    return 1;
-  }
-  return 0;
-}
 
 //------------------------------------------------------------------
 // Terminal input
@@ -33,16 +34,19 @@ int terminal_input(std::vector<Turnout>& turnout, std::vector<Sign>& sign)
   std::cin >> type;
   switch (type)
   {
-    case 'w': case 's':
-      break;
-    case 'q':
-      return 1;
-    case 'r':
-      std::cout << "Report Status\n";
-      return 0;
-    default:
-      std::cout << "type unknown\n";
-      return 0;
+  case 'w': case 's':
+    break;
+  case 'q':
+    return 1;
+  case 'c': 
+  	check_status(turnout, sign);
+  	return 0;
+  case 'r':
+    report_status(turnout, sign);
+    return 0;
+  default:
+    std::cout << "type unknown\n";
+    return 0;
   }
 
   unsigned int number;
@@ -64,8 +68,18 @@ int terminal_input(std::vector<Turnout>& turnout, std::vector<Sign>& sign)
 
   char instruction;
   std::cin >> instruction;
-  if (instruction == 'r') {
-    std::cout << "REPORT " << type << number << "\n";
+  if (instruction == 'r') 
+  {
+    if (type == 'w') 
+    {
+      std::cout << "Weiche '" << turnout.at(number).get_label() << "' auf "
+        << turnout.at(number).get_state() << std::endl;
+    }    
+    if (type == 's') 
+    {
+      std::cout << "Signal '" << sign.at(number).get_label() << "' auf "
+        << sign.at(number).get_state() << std::endl;
+    }
     return 0;
   }
 
@@ -82,14 +96,14 @@ int terminal_input(std::vector<Turnout>& turnout, std::vector<Sign>& sign)
           std::cout << "turnout state not possible\n";
           return 0;
         }
-        set_turnout(turnout, number, new_state);
+        turnout.at(number).set_state(new_state);
         break;
       case 's':
         if ((new_state < 0) | (new_state > 3)) {
           std::cout << "signal state not possible\n";
           return 0;
         }
-        set_sign(sign, number, new_state);
+        sign.at(number).set_state(new_state);
         break;
     }
     return 0;
@@ -98,19 +112,26 @@ int terminal_input(std::vector<Turnout>& turnout, std::vector<Sign>& sign)
   return 0;
 }
 
-//------------------------------------------------------------------
+/*------------------------------------------------------------------
 // Output functions for code development
 
-int set_turnout(std::vector<Turnout>& turnout, const int nr, const int state)
+
+void report_status(std::vector<Turnout>& turnout, std::vector<Sign>& sign) 
 {
-  //std::cout << "Weiche " << nr << " auf " << state << std::endl;
-  turnout.at(nr).set_state(state);
-  return 0;
+  std::cout << "Report Status..\n";
+ 
+  for (unsigned int i = 0; i < turnout.size(); i++) 
+  {
+    std::cout << "Weiche " << std::dec << turnout.at(i).get_number() << " | " 
+    << turnout.at(i).get_label() << "\t| State " << turnout.at(i).get_state()  
+    << "\n";
+  }
+ 
+  for (unsigned int i = 0; i < sign.size(); i++)
+  {
+    std::cout << "Signal " << std::dec << sign.at(i).get_number() << " | " 
+    << sign.at(i).get_label() << "\t| State " << sign.at(i).get_state() << "\n";
+  }
 }
 
-int set_sign(std::vector<Sign>& sign, const int nr, const int state)
-{
-  //std::cout << "Signal " << nr << " auf " << state << std::endl;
-  sign.at(nr).set_state(state);
-  return 0;
-}
+*/

@@ -110,6 +110,7 @@ void GleisStellBild::on_button_clicked(int data)
 {
   int state = m_turnout[data].get_state();
   m_turnout[data].set_state(!state);
+
 };
 
 

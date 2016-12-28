@@ -7,6 +7,7 @@
 */
 
 #include <string>
+#include <vector>
 class Canbus;
 
 //-------------------------------------------------------------
@@ -24,6 +25,7 @@ class Railroad {
     virtual int set_state(int state) = 0;
     virtual int get_state() = 0;
     virtual std::string get_label() = 0;
+    int get_number() {return m_nr;};
   protected:
     Railroad(Canbus& bus)
     : m_bus(bus),
@@ -47,6 +49,7 @@ class Turnout : public Railroad {
   public:
     Turnout(Canbus& bus, int nr, std::string label, int node, int channel);
     int set_state(int state);
+    int check_state();
     int get_state() {return m_state;};
     std::string get_label() {return m_label;};
 };
@@ -61,5 +64,13 @@ class Sign : public Railroad {
     int get_state() {return m_state;};
     std::string get_label() {return m_label;};
 };
+
+
+//------------------------------------------------------------------
+// Helper functions 
+
+void check_status(std::vector<Turnout>& turnout, std::vector<Sign>& sign);
+void report_status(std::vector<Turnout>& turnout, std::vector<Sign>& sign);
+
 
 #endif // RAILROAD_H

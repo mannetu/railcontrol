@@ -1,10 +1,12 @@
-/*********************************************************
-* railroad.cpp
-*
-*
-*********************************************************/
+/*
+ * railroad.cpp
+ *
+ */
+
 #include "railroad.h"
 #include <iostream>
+#include <thread>
+#include <chrono>
 #include "canbus.h"
 
 //-------------------------------------------------------------
@@ -32,6 +34,11 @@ int Turnout::set_state(int state)
   return 0;
 }
 
+int Turnout::check_state()
+{
+  return  m_bus.output(m_canid, 0xFF);
+}
+
 //-------------------------------------------------------------
 // Signals
 //-------------------------------------------------------------
@@ -56,3 +63,48 @@ int Sign::set_state(int state)
   m_bus.output(m_canid, m_state);
   return 0;
 }
+
+
+//-------------------------------------------------------------
+// Helper functions
+//-------------------------------------------------------------
+
+//------------------------------------------------------------------
+// Output functions for code development
+
+
+void check_status(std::vector<Turnout>& turnout, std::vector<Sign>& sign)
+{
+  std::cout << "Request status..\n";
+ 
+  for (unsigned int i = 0; i < turnout.size(); i++) 
+  {
+    turnout.at(i).check_state(); 
+  }
+  std::this_thread::sleep_for(std::chrono::milliseconds(500));
+  report_status(turnout, sign);
+
+}
+
+
+void report_status(std::vector<Turnout>& turnout, std::vector<Sign>& sign) 
+{
+  std::cout << "Report Status..\n";
+ 
+  for (unsigned int i = 0; i < turnout.size(); i++) 
+  {
+    std::cout << "Weiche " << std::dec << turnout.at(i).get_number() << " | " 
+    << turnout.at(i).get_label() << "\t| State " << turnout.at(i).get_state()  
+    << "\n";
+  }
+ 
+  for (unsigned int i = 0; i < sign.size(); i++)
+  {
+    std::cout << "Signal " << std::dec << sign.at(i).get_number() << " | " 
+    << sign.at(i).get_label() << "\t| State " << sign.at(i).get_state() << "\n";
+  }
+}
+
+
+
+
