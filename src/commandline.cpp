@@ -34,7 +34,7 @@ void console(Canbus& bus, std::vector<Turnout>& turnout, std::vector<Sign>& sign
 
 int terminal_input(std::vector<Turnout>& turnout, std::vector<Sign>& sign)
 {
-  std::cout << ">> ";
+  std::cout << "\n>> ";
 
   char type;
   std::cin >> type;
@@ -124,7 +124,11 @@ void thread_get_frame(Canbus &railbus, std::vector<Turnout>& turnout)
 {
   while(1)  
   {
-    if (railbus.is_can_msg() > 0) parse_can_msg(railbus.get_frame(), turnout);
+    if (railbus.is_can_msg() > 0) 
+    {
+      parse_can_msg(railbus.get_frame(), turnout);
+      std::cout.flush();
+    }
     else  std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
 }

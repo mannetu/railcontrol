@@ -30,15 +30,26 @@ Turnout::Turnout(Canbus& bus, int nr, std::string label, int node, int channel) 
 
 int Turnout::switch_state(int state)
 {
-  std::cout << "\nTurnout \'" << m_label << "\' auf " << std::dec << m_state << "\n";
-  m_bus.output(m_canid, m_state);
+  if (state == m_state) 
+  {
+    std::cout << "\nWeiche bereits richtig\n";
+    return 0;
+  }
+  std::cout << "\nStelle Weiche \'" << m_label << "\' auf " << std::dec << state << "\n";
+  m_bus.output(m_canid, state);
+  int counter = 0;
 	while (m_state != state) 
 	{
 	  std::cout << "."; std::cout.flush();
-	  std::this_thread::sleep_for(std::chrono::milliseconds(200));
+	  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	  ++counter;
+	  if (counter > 100)
+	  {
+	    std::cout << "Weiche konnte nicht umgestellt werden\n";
+	    std::cout.flush();
+	    return -1;
+	  }
 	}
-  std::cout << "Weiche " << "geschaltet\n";
-  std::cout.flush();
   return 0;
 }
 
@@ -88,7 +99,7 @@ int Sign::set_state(int state)
 
 void check_status(std::vector<Turnout>& turnout, std::vector<Sign>& sign)
 {
-  std::cout << "Request status..\n";
+  std::cout << "\nRequest status..\n";
  
   for (unsigned int i = 0; i < turnout.size(); i++) 
   {
@@ -101,7 +112,7 @@ void check_status(std::vector<Turnout>& turnout, std::vector<Sign>& sign)
 
 void report_status(std::vector<Turnout>& turnout, std::vector<Sign>& sign) 
 {
-  std::cout << "Report Status..\n";
+  std::cout << "\nReport Status..\n";
  
   for (unsigned int i = 0; i < turnout.size(); i++) 
   {
@@ -127,9 +138,11 @@ int parse_can_msg(const struct can_frame& frame, std::vector<Turnout>& turnout)
 		  if (turnout.at(i).get_canid() == int(((frame.can_id & 0xFF) | ADDR_TURN)))
 		  {
   		  turnout.at(i).set_state(frame.data[0]);
+  		  std::cout << "Weiche '" << turnout.at(i).get_label() << "' auf " 
+  		  << std::dec << turnout.at(i).get_state() << "\n\n>> ";
   		  return 0; 
 		  }
-		};
+		}
 	}
 
 
