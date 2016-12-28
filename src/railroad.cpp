@@ -35,7 +35,8 @@ int Turnout::switch_state(int state)
     std::cout << "\nWeiche bereits richtig\n";
     return 0;
   }
-  std::cout << "\nStelle Weiche \'" << m_label << "\' auf " << std::dec << state << "\n";
+  std::cout << "\nStelle Weiche " << m_nr << " \'" << m_label << "\' auf " 
+    << std::dec << state << "\n";
   m_bus.output(m_canid, state);
   int counter = 0;
 	while (m_state != state) 
@@ -138,12 +139,14 @@ int parse_can_msg(const struct can_frame& frame, std::vector<Turnout>& turnout)
 		  if (turnout.at(i).get_canid() == int(((frame.can_id & 0xFF) | ADDR_TURN)))
 		  {
   		  turnout.at(i).set_state(frame.data[0]);
-  		  std::cout << "Weiche '" << turnout.at(i).get_label() << "' auf " 
-  		  << std::dec << turnout.at(i).get_state() << "\n\n>> ";
+  		  std::cout << "Weiche " << std::dec << turnout.at(i).get_number() 
+  		    << " '" << turnout.at(i).get_label() << "' auf " 
+  		    << turnout.at(i).get_state() << "\n\n>> ";
   		  return 0; 
 		  }
 		}
 	}
+
 
 
   std::cout << "id not found\n";
