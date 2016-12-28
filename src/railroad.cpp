@@ -26,11 +26,26 @@ Turnout::Turnout(Canbus& bus, int nr, std::string label, int node, int channel) 
             << "\t| Id " << m_canid << "\n";
 }
 
+
+
+int Turnout::switch_state(int state)
+{
+  std::cout << "\nTurnout \'" << m_label << "\' auf " << std::dec << m_state << "\n";
+  m_bus.output(m_canid, m_state);
+	while (m_state != state) 
+	{
+	  std::cout << "."; std::cout.flush();
+	  std::this_thread::sleep_for(std::chrono::milliseconds(200));
+	}
+  std::cout << "Weiche " << "geschaltet\n";
+  std::cout.flush();
+  return 0;
+}
+
+
 int Turnout::set_state(int state)
 {
   m_state = state;
-  std::cout << "\nTurnout \'" << m_label << "\' auf " << std::dec << m_state << "\n";
-  m_bus.output(m_canid, m_state);
   return 0;
 }
 
@@ -56,6 +71,7 @@ Sign::Sign(Canbus& bus, int nr, std::string label, int node, int channel) : Rail
             << "\t| Id " << m_canid << std::dec << "\n";
 }
 
+
 int Sign::set_state(int state)
 {
   m_state = state;
@@ -80,7 +96,6 @@ void check_status(std::vector<Turnout>& turnout, std::vector<Sign>& sign)
   }
   std::this_thread::sleep_for(std::chrono::milliseconds(500));
   report_status(turnout, sign);
-
 }
 
 
@@ -103,5 +118,23 @@ void report_status(std::vector<Turnout>& turnout, std::vector<Sign>& sign)
 }
 
 
+int parse_can_msg(const struct can_frame& frame, std::vector<Turnout>& turnout)  
+{
+	if (((frame.can_id & 0xF00) ^ ADDR_TUFB) == 0)
+	{
+		for (unsigned int i = 0; i < turnout.size(); i++) 
+		{
+		  if (turnout.at(i).get_canid() == int(((frame.can_id & 0xFF) | ADDR_TURN)))
+		  {
+  		  turnout.at(i).set_state(frame.data[0]);
+  		  return 0; 
+		  }
+		};
+	}
+
+
+  std::cout << "id not found\n";
+  return -1; 		  
+}
 
 

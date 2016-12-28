@@ -17,7 +17,7 @@ int terminal_input(std::vector<Turnout>& turnout, std::vector<Sign>& sign);
 //------------------------------------------------------------------
 // Thread function
 
-void thread_get_frame(Canbus &railbus);
+void thread_get_frame(Canbus &railbus, std::vector<Turnout>& turnout);
 
 
 #endif

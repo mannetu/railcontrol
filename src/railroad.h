@@ -25,6 +25,7 @@ class Railroad {
     virtual int set_state(int state) = 0;
     virtual int get_state() = 0;
     virtual std::string get_label() = 0;
+		int get_canid() {return m_canid;};
     int get_number() {return m_nr;};
   protected:
     Railroad(Canbus& bus)
@@ -48,6 +49,7 @@ class Railroad {
 class Turnout : public Railroad {
   public:
     Turnout(Canbus& bus, int nr, std::string label, int node, int channel);
+		int switch_state(int state);
     int set_state(int state);
     int check_state();
     int get_state() {return m_state;};
@@ -60,6 +62,7 @@ class Turnout : public Railroad {
 class Sign : public Railroad {
   public:
     Sign(Canbus& bus, int nr, std::string label, int node, int channel);
+		int switch_state(int state);
     int set_state(int state);
     int get_state() {return m_state;};
     std::string get_label() {return m_label;};
@@ -71,6 +74,6 @@ class Sign : public Railroad {
 
 void check_status(std::vector<Turnout>& turnout, std::vector<Sign>& sign);
 void report_status(std::vector<Turnout>& turnout, std::vector<Sign>& sign);
-
+int parse_can_msg(const struct can_frame& frame, std::vector<Turnout>& turnout);
 
 #endif // RAILROAD_H

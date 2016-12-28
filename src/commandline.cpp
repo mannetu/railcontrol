@@ -9,7 +9,7 @@
 void console(Canbus& bus, std::vector<Turnout>& turnout, std::vector<Sign>& sign) 
 {
   // Start CAN daemon thread
-  std::thread thread1(thread_get_frame, std::ref(bus));
+  std::thread thread1(thread_get_frame, std::ref(bus), std::ref(turnout));
   thread1.detach();
   
   // Terminal input routine
@@ -102,7 +102,7 @@ int terminal_input(std::vector<Turnout>& turnout, std::vector<Sign>& sign)
           std::cout << "turnout state not possible\n";
           return 0;
         }
-        turnout.at(number).set_state(new_state);
+        turnout.at(number).switch_state(new_state);
         break;
       case 's':
         if ((new_state < 0) | (new_state > 3)) {
@@ -120,12 +120,13 @@ int terminal_input(std::vector<Turnout>& turnout, std::vector<Sign>& sign)
 
 
 // Thread function
-void thread_get_frame(Canbus &railbus)
+void thread_get_frame(Canbus &railbus, std::vector<Turnout>& turnout)
 {
   while(1)  
   {
-    railbus.is_can_msg();
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    if (railbus.is_can_msg() > 0) parse_can_msg(railbus.get_frame(), turnout);
+    else  std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
 }
+
 
