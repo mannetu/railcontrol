@@ -7,17 +7,10 @@
 #include <iostream>
 #include <vector>
 #include <thread>
-#include <chrono>
-//#include <mutex>
 #include "railroad.h"
 #include "canbus.h"
 #include "commandline.h"
 #include "gleisstellbild.h"
-
-//std::mutex mtx;
-
-// Function prototypes
-void thread_get_frame(Canbus &railbus);
 
 
 int main(int argc, char *argv[])
@@ -28,7 +21,7 @@ int main(int argc, char *argv[])
   << "*                    v0.1                          *\n"
   << "****************************************************\n\n";
 
-  // Define CANbus, turnouts and signals 
+  // Railroad Setup
   Canbus railbus{"vcan0"};
   
   std::cout << "Railroad layout..\n\n";
@@ -44,7 +37,7 @@ int main(int argc, char *argv[])
   sign.push_back({railbus, 1, "Bhf-Ein-Ost", 0, 0});
 
   
-  
+  // User Interface
   if (argc>1 && (!strcmp("-g", argv[1]))) // GUI
   {  
     auto app = Gtk::Application::create("org.gtkmm.example");
@@ -54,22 +47,10 @@ int main(int argc, char *argv[])
   } 
   else // Terminal-UI
   {       
-    // Start CAN daemon thread
-    std::thread thread1(thread_get_frame, std::ref(railbus));
-    thread1.detach();
-    // Terminal input routine
-    console(turnout, sign);
+    console(railbus, turnout, sign);
     return 0;
   }
 }
 
-void thread_get_frame(Canbus &railbus)
-{
-  while(1)  
-  {
-    railbus.is_can_msg();
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
-  }
-}
 
 

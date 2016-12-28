@@ -2,10 +2,11 @@
 #define COMMANDLINE_H
 
 #include "railroad.h"
+#include "canbus.h"
 #include <vector>
 
 
-void console(std::vector<Turnout>& turnout, std::vector<Sign>& sign);
+void console(Canbus& bus, std::vector<Turnout>& turnout, std::vector<Sign>& sign);
 
 
 //------------------------------------------------------------------
@@ -13,10 +14,10 @@ void console(std::vector<Turnout>& turnout, std::vector<Sign>& sign);
 
 int terminal_input(std::vector<Turnout>& turnout, std::vector<Sign>& sign);
 
-/*------------------------------------------------------------------
-// Output functions for code development
+//------------------------------------------------------------------
+// Thread function
 
-void report_status(std::vector<Turnout>& turnout, std::vector<Sign>& sign);
-*/
+void thread_get_frame(Canbus &railbus);
+
 
 #endif

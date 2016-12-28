@@ -2,11 +2,17 @@
 
 #include <iostream>
 #include <vector>
-#include "railroad.h"
+#include <thread>
+#include <chrono>
 
 
-void console(std::vector<Turnout>& turnout, std::vector<Sign>& sign) 
+void console(Canbus& bus, std::vector<Turnout>& turnout, std::vector<Sign>& sign) 
 {
+  // Start CAN daemon thread
+  std::thread thread1(thread_get_frame, std::ref(bus));
+  thread1.detach();
+  
+  // Terminal input routine
   std::cout << "\nEnter instructions: \n";   
   int x = 1;
   while(x) 
@@ -112,26 +118,14 @@ int terminal_input(std::vector<Turnout>& turnout, std::vector<Sign>& sign)
   return 0;
 }
 
-/*------------------------------------------------------------------
-// Output functions for code development
 
-
-void report_status(std::vector<Turnout>& turnout, std::vector<Sign>& sign) 
+// Thread function
+void thread_get_frame(Canbus &railbus)
 {
-  std::cout << "Report Status..\n";
- 
-  for (unsigned int i = 0; i < turnout.size(); i++) 
+  while(1)  
   {
-    std::cout << "Weiche " << std::dec << turnout.at(i).get_number() << " | " 
-    << turnout.at(i).get_label() << "\t| State " << turnout.at(i).get_state()  
-    << "\n";
-  }
- 
-  for (unsigned int i = 0; i < sign.size(); i++)
-  {
-    std::cout << "Signal " << std::dec << sign.at(i).get_number() << " | " 
-    << sign.at(i).get_label() << "\t| State " << sign.at(i).get_state() << "\n";
+    railbus.is_can_msg();
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
 }
 
-*/

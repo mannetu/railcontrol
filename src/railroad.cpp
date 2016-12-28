@@ -69,9 +69,6 @@ int Sign::set_state(int state)
 // Helper functions
 //-------------------------------------------------------------
 
-//------------------------------------------------------------------
-// Output functions for code development
-
 
 void check_status(std::vector<Turnout>& turnout, std::vector<Sign>& sign)
 {
