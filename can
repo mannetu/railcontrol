@@ -1,0 +1,9 @@
+#
+# Shell script to start can interface
+#
+clear
+echo "start can interface"
+
+sudo /sbin/ip link set can0 up type can bitrate 250000
+
+echo "done"

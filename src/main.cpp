@@ -22,13 +22,13 @@ int main(int argc, char *argv[])
   << "****************************************************\n\n";
 
   // Railroad Setup
-  Canbus railbus{"vcan0"};
+  Canbus railbus{"can0"};
   
   std::cout << "Railroad layout..\n\n";
 
   std::vector<Turnout> turnout;
   turnout.push_back({railbus, 0, "Bahnhof-West", 0, 0});
-  turnout.push_back({railbus, 1, "Bahnhof-Ost", 1, 0});
+  turnout.push_back({railbus, 1, "Bahnhof-Ost", 0, 1});
   turnout.push_back({railbus, 2, "Abstellgleis", 2, 1});
   turnout.push_back({railbus, 3, "Bergbahn", 3, 0});
 
